@@ -2487,7 +2487,7 @@ qs@~6.5.2:
 
 "quantize@github:lokesh/quantize":
   version "1.4.0"
-  resolved "git+ssh://git@github.com/lokesh/quantize.git#270c6f81623c3247eed50ba37b9d74d79af7a267"
+  resolved "https://codeload.github.com/lokesh/quantize/tar.gz/270c6f81623c3247eed50ba37b9d74d79af7a267"
 
 queue-microtask@^1.2.2:
   version "1.2.3"

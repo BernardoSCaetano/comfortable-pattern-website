@@ -17,7 +17,7 @@ export default function Home() {
     }, [])
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background to-secondary">
+        <div className="h-full flex flex-col items-center justify-center bg-gradient-to-br from-background to-secondary">
             <Card className="w-72 h-72 rounded-full shadow-lg transition-all duration-1000 ease-in-out hover:scale-110 flex items-center justify-center">
                 <div
                     className="w-64 h-64 rounded-full"

@@ -91,7 +91,7 @@ export default function Pipa() {
 
     return (
         <div
-            className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden"
+            className="h-full flex flex-col items-center justify-center p-4 relative"
             style={{
                 background: `linear-gradient(120deg, ${backgroundColors[0]} 25%, ${backgroundColors[1]} 50%, ${backgroundColors[2]} 75%)`,
                 backgroundBlendMode: 'multiply',

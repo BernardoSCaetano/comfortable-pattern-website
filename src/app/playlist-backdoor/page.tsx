@@ -59,7 +59,7 @@ export default function SongPlaylist() {
 
     return (
         <div
-            className="min-h-screen flex flex-col items-center justify-start p-4 relative overflow-hidden"
+            className="h-full flex flex-col items-center justify-start p-4 relative overflow-hidden"
             style={{
                 background: `linear-gradient(120deg, ${backgroundColors[0]} 25%, ${backgroundColors[1]} 50%, ${backgroundColors[2]} 75%)`,
                 backgroundBlendMode: 'multiply',

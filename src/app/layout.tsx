@@ -51,10 +51,11 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* Maintain a clean background, without the hexagonal pattern image */}
-        {children}
+        <html lang="en" className="h-full">
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-full overflow-hidden`}>
+        <main className="h-full overflow-auto">
+            {children}
+        </main>
         </body>
         </html>
     );

@@ -26,12 +26,17 @@ function LoveCounter({ currentDate }: { currentDate: Date }) {
         <Card className="bg-white bg-opacity-80 shadow-lg">
             <CardContent className="p-4">
                 <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
+                    initial={{opacity: 0, y: -20}}
+                    animate={{opacity: 1, y: 0}}
+                    transition={{duration: 0.5}}
                 >
-                    <h2 className="text-2xl font-bold text-pink-600">Day {daysPassed}</h2>
-                    <p className="text-sm text-gray-600">of our musical journey</p>
+                    <h2 className="text-2xl font-bold text-pink-600">
+                        {daysPassed < 1 ? "The journey hasn't started yet" : `Day ${daysPassed}`}
+                    </h2>
+                    <p className="text-sm text-gray-600">
+                        {daysPassed < 1 ? "Stay tuned for our musical journey" : "of our musical journey"}
+                    </p>
+
                 </motion.div>
             </CardContent>
         </Card>

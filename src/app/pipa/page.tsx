@@ -3,8 +3,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { songs, fallbackSong } from '@/lib/songs'
-import { playlistAuthorMap } from '@/lib/playlistMap'
-import { idAndPhrasesMap } from '@/lib/idAndPhrasesMap'
+import { playlistAuthorMap } from '@/lib/playlistMap' // Import the mapping file
+import { idAndPhrasesMap } from '@/lib/idAndPhrasesMap' // Import the mapping file
 import { Calendar } from "@/components/ui/calendar"
 import { format, differenceInCalendarDays } from "date-fns"
 import { Card, CardContent } from "@/components/ui/card"
@@ -23,7 +23,7 @@ function LoveCounter({ currentDate }: { currentDate: Date }) {
     const daysPassed = differenceInCalendarDays(currentDate, startDate) + 1;
 
     return (
-        <Card className="bg-white bg-opacity-80 shadow-lg w-full">
+        <Card className="bg-white bg-opacity-80 shadow-lg">
             <CardContent className="p-4">
                 <motion.div
                     initial={{opacity: 0, y: -20}}
@@ -36,6 +36,7 @@ function LoveCounter({ currentDate }: { currentDate: Date }) {
                     <p className="text-sm text-gray-600">
                         {daysPassed < 1 ? "Stay tuned for our musical journey" : "of our musical journey"}
                     </p>
+
                 </motion.div>
             </CardContent>
         </Card>
@@ -43,7 +44,7 @@ function LoveCounter({ currentDate }: { currentDate: Date }) {
 }
 
 function getPastelColor(seed: number) {
-    const hue = (seed * 137.508) % 360;
+    const hue = (seed * 137.508) % 360; // Use golden angle approximation for distribution
     return `hsl(${hue}, 100%, 85%)`;
 }
 
@@ -60,8 +61,10 @@ export default function Pipa() {
     const [currentSong, setCurrentSong] = useState<Song | null>(null)
     const [date, setDate] = useState<Date | undefined>(new Date())
 
+    // Get the current UTC date
     const currentUTCDate = new Date(new Date().toISOString().split('T')[0]);
 
+    // Filter available dates to only include dates before or equal to today (in UTC)
     const availableDates = songs
         .map(song => new Date(song.date))
         .filter(songDate => songDate <= currentUTCDate);
@@ -76,23 +79,25 @@ export default function Pipa() {
         return getColorsForDate(date || currentUTCDate);
     }, [date, currentUTCDate]);
 
+    // Function to retrieve the display name from the map or fallback to playlistAuthor
     const getDisplayName = (author: string) => {
         return playlistAuthorMap[author] || author;
     };
 
+    // Function to retrieve the display name from the map or fallback to playlistAuthor
     const getDisplayQuoteOfTheDay = (dayId: number) => {
         return idAndPhrasesMap[dayId] || "Enjoy Taylor Swift!";
     };
 
     return (
         <div
-            className="min-h-screen flex flex-col items-center justify-start p-4 space-y-4 relative overflow-y-auto"
+            className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden"
             style={{
                 background: `linear-gradient(120deg, ${backgroundColors[0]} 25%, ${backgroundColors[1]} 50%, ${backgroundColors[2]} 75%)`,
                 backgroundBlendMode: 'multiply',
             }}
         >
-            <div className="absolute inset-0 z-0 bg-gradient-to-br from-white via-transparent to-gray-100 opacity-70"/>
+            <div className="absolute inset-0 z-0 bg-gradient-to-br from-white via-transparent to-gray-100 opacity-70" />
             <div
                 className="absolute inset-0 z-0"
                 style={{
@@ -102,58 +107,54 @@ export default function Pipa() {
                 }}
             />
             <div className="w-full max-w-4xl flex flex-col items-center space-y-4 relative z-10">
-                <LoveCounter currentDate={date || currentUTCDate}/>
+                <LoveCounter currentDate={date || currentUTCDate} />
+                <div className="w-full flex flex-col md:flex-row items-center md:items-start justify-center space-y-4 md:space-y-0 md:space-x-8">
+                    <Card className="w-full md:w-96 h-96 bg-gradient-to-br from-gray-800 to-gray-900 shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105 duration-300">
+                        <CardContent className="p-0 h-full flex flex-col">
+                            {currentSong && (
+                                <>
+                                    <div className="flex-grow relative">
+                                        <div className="w-full h-full p-2 bg-gray-900 rounded-lg">
+                                            <iframe
+                                                src={`https://open.spotify.com/embed/track/${currentSong.trackId}`}
+                                                width="100%"
+                                                height="100%"
+                                                allow="encrypted-media"
+                                                loading="lazy"
+                                                className="rounded-lg"
+                                            ></iframe>
+                                        </div>
+                                    </div>
+                                    <div className="bg-gray-900 text-white p-4">
+                                        <h2 className="text-2xl font-extrabold tracking-wide">
+                                            {getDisplayName(currentSong.playlistAuthor)}
+                                        </h2>
+                                        <p className="text-md text-gray-400 mt-2">
+                                            {getDisplayQuoteOfTheDay(currentSong.id)}
+                                        </p>
+                                    </div>
+                                </>
+                            )}
+                        </CardContent>
+                    </Card>
 
-                <Card
-                    className="w-full bg-gradient-to-br from-gray-800 to-gray-900 shadow-lg rounded-lg overflow-hidden">
-                    <CardContent className="p-0 flex flex-col">
-                        {currentSong && (
-                            <>
-                                {/* Ensure responsiveness and spacing around the iframe */}
-                                <div className="relative w-full pb-[56.25%] h-0 rounded-lg overflow-hidden">
-                                    <iframe
-                                        src={`https://open.spotify.com/embed/track/${currentSong.trackId}`}
-                                        width="100%"
-                                        height="100%"
-                                        allow="encrypted-media"
-                                        loading="lazy"
-                                        title="Spotify Embed"
-                                        className="absolute inset-0 w-full h-full rounded-lg"
-                                        style={{border: "none"}}
-                                    ></iframe>
-                                </div>
-
-                                {/* Add padding and refine text styles */}
-                                <div className="bg-gray-900 text-white p-4">
-                                    <h2 className="text-2xl font-extrabold tracking-wide">
-                                        {getDisplayName(currentSong.playlistAuthor)}
-                                    </h2>
-                                    <p className="text-md text-gray-400 mt-2">
-                                        {getDisplayQuoteOfTheDay(currentSong.id)}
-                                    </p>
-                                </div>
-                            </>
-                        )}
-                    </CardContent>
-                </Card>
-
-                <Card className="w-full bg-white shadow-lg">
-                    <CardContent className="p-4">
-                        <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={setDate}
-                            className="rounded-md border"
-                            disabled={(date) => !availableDates.some(availableDate =>
-                                availableDate.getFullYear() === date.getFullYear() &&
-                                availableDate.getMonth() === date.getMonth() &&
-                                availableDate.getDate() === date.getDate()
-                            ) || date > currentUTCDate}
-                        />
-                    </CardContent>
-                </Card>
+                    <Card className="w-full md:w-auto bg-white shadow-lg">
+                        <CardContent className="p-4">
+                            <Calendar
+                                mode="single"
+                                selected={date}
+                                onSelect={setDate}
+                                className="rounded-md border"
+                                disabled={(date) => !availableDates.some(availableDate =>
+                                    availableDate.getFullYear() === date.getFullYear() &&
+                                    availableDate.getMonth() === date.getMonth() &&
+                                    availableDate.getDate() === date.getDate()
+                                ) || date > currentUTCDate}
+                            />
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
-
             <div
                 className="absolute inset-0 opacity-50 z-0"
                 style={{

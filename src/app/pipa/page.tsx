@@ -62,7 +62,8 @@ export default function Pipa() {
     const [date, setDate] = useState<Date | undefined>(new Date())
 
     // Get the current UTC date
-    const currentUTCDate = new Date(new Date().toISOString().split('T')[0]);
+    const currentUTCDate = new Date(new Date().toLocaleDateString('en-CA')); // 'en-CA' ensures yyyy-mm-dd format
+
 
     // Filter available dates to only include dates before or equal to today (in UTC)
     const availableDates = songs

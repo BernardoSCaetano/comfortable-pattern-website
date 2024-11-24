@@ -8,6 +8,7 @@ import { idAndPhrasesMap } from '@/lib/idAndPhrasesMap' // Import the mapping fi
 import { Calendar } from "@/components/ui/calendar"
 import { format, differenceInCalendarDays } from "date-fns"
 import { Card, CardContent } from "@/components/ui/card"
+import { DiscoOverlay } from '@/components/disco-overlay'
 
 type Song = {
     id: number;
@@ -60,6 +61,7 @@ function getColorsForDate(date: Date) {
 export default function Pipa() {
     const [currentSong, setCurrentSong] = useState<Song | null>(null)
     const [date, setDate] = useState<Date | undefined>(new Date())
+    const [isPlaying, setIsPlaying] = useState(false)
 
     // Get the current UTC date
     const currentUTCDate = new Date(new Date().toLocaleDateString('en-CA')); // 'en-CA' ensures yyyy-mm-dd format
@@ -74,6 +76,17 @@ export default function Pipa() {
         const selectedSong = songs.find(song => song.date === selectedDate)
         setCurrentSong(selectedSong || fallbackSong)
     }, [date])
+
+    useEffect(() => {
+        const handleMessage = (event: MessageEvent) => {
+            if (event.data.type === 'playerStateChanged') {
+                setIsPlaying(event.data.data.isPlaying)
+            }
+        }
+        window.addEventListener('message', handleMessage)
+        return () => window.removeEventListener('message', handleMessage)
+    }, [])
+
 
     const backgroundColors = useMemo(() => {
         return getColorsForDate(date || currentUTCDate);
@@ -97,7 +110,8 @@ export default function Pipa() {
                 backgroundBlendMode: 'multiply',
             }}
         >
-            <div className="absolute inset-0 z-0 bg-gradient-to-br from-white via-transparent to-gray-100 opacity-70" />
+            <DiscoOverlay isPlaying={isPlaying}/>
+            <div className="absolute inset-0 z-0 bg-gradient-to-br from-white via-transparent to-gray-100 opacity-70"/>
             <div
                 className="absolute inset-0 z-0"
                 style={{
@@ -107,8 +121,9 @@ export default function Pipa() {
                 }}
             />
             <div className="w-full max-w-4xl flex flex-col items-center space-y-4 relative z-10">
-                <LoveCounter currentDate={date || currentUTCDate} />
-                <div className="w-full flex flex-col md:flex-row items-center md:items-start justify-center space-y-4 md:space-y-0 md:space-x-8">
+                <LoveCounter currentDate={date || currentUTCDate}/>
+                <div
+                    className="w-full flex flex-col md:flex-row items-center md:items-start justify-center space-y-4 md:space-y-0 md:space-x-8">
                     <Card className="w-full md:w-96 h-96 bg-gradient-to-br from-gray-800 to-gray-900 shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105 duration-300">
                         <CardContent className="p-0 h-full flex flex-col">
                             {currentSong && (
@@ -122,6 +137,10 @@ export default function Pipa() {
                                                 allow="encrypted-media"
                                                 loading="lazy"
                                                 className="rounded-lg"
+                                                onLoad={(e) => {
+                                                    const iframe = e.target as HTMLIFrameElement
+                                                    iframe.contentWindow?.postMessage({ command: 'subscribe', channel: 'player' }, '*')
+                                                }}
                                             ></iframe>
                                         </div>
                                     </div>

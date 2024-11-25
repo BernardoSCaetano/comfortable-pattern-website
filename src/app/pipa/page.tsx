@@ -110,7 +110,6 @@ export default function Pipa() {
                 backgroundBlendMode: 'multiply',
             }}
         >
-            <DiscoOverlay isPlaying={isPlaying}/>
             <div className="absolute inset-0 z-0 bg-gradient-to-br from-white via-transparent to-gray-100 opacity-70"/>
             <div
                 className="absolute inset-0 z-0"

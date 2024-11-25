@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type {Metadata} from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import Script from "next/script";
 
 // Get base URL from environment variables
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
